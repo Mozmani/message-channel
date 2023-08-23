@@ -1,25 +1,16 @@
 version: '3.9'
 
 services:
-#  msgchannelmongo:
-#    env_file: ./.env
-#    image: 'postgres:14-alpine'
-#    ports:
-#      - "5439:5439"
-#    container_name: userservicepostgres
-#    environment:
-#      - POSTGRES_DB=userservicepostgres
-#      - POSTGRES_USER=root
-#      - POSTGRES_PASSWORD=${DB_PASSWORD}
-#      - PGPORT=5439
-#      - PGDATABASE=userservicepostgres
-#    healthcheck:
-#      test: [ "CMD-SHELL", "pg_isready" ]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 5
-#    volumes:
-#      - db-data:/var/lib/postgresql/data
+  msgchannelmongo:
+    image: mongo:latest
+    container_name: msgchannelmongo
+    ports:
+      - "5440:5440"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME='root'
+      - MONGO_INITDB_ROOT_PASSWORD='example'
+    volumes:
+      - db-data:/data/db
 
   msgchannel:
     build:
@@ -29,13 +20,11 @@ services:
     ports:
       - "8082:8082"
       - "5004:5004"
-#    depends_on:
-#      msgchannelmongo:
-#        condition: service_healthy
     environment:
-      DB_USERNAME: root
-      DB_PASSWORD: root
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
     command: java -jar -Dmicronaut.environments=local application.jar
+
 
 networks:
   default:

@@ -1,2 +1,6 @@
 server:
   port: 8081
+
+
+mongodb:
+  uri: mongodb://localhost:5440/data/db
